@@ -1,0 +1,1 @@
+export type CalendarService = 'google' | 'outlook' | 'notion';

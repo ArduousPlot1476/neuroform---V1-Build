@@ -1,0 +1,35 @@
+.quick-link-menu {
+  display: flex;
+  justify-content: center;
+  gap: 30px; /* Space between the icons */
+  margin: 20px 0;
+}
+
+.quick-link {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f9fafb, #e5e7eb);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.quick-link:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(135deg, #ffffff, #d1d5db);
+}
+
+.quick-link-img {
+  width: 50%;
+  height: 50%;
+  object-fit: contain; /* Keeps the images contained within the circle */
+}
+
+.quick-link:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}

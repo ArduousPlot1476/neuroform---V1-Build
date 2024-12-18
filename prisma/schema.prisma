@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  password  String
+  avatarUrl String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  tasks          Task[]
+  journals       Journal[]
+  focusSessions  FocusSession[]
+  mentorSessions MentorSession[]
+
+  @@map("users")
+}
+
+model Task {
+  id        String   @id @default(uuid())
+  title     String
+  category  TaskCategory
+  priority  TaskPriority
+  completed Boolean  @default(false)
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, category])
+  @@index([userId, priority])
+  @@index([completed])
+  @@map("tasks")
+}
+
+model Journal {
+  id        String      @id @default(uuid())
+  type      JournalType
+  content   String
+  userId    String      @map("user_id")
+  createdAt DateTime    @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type])
+  @@index([createdAt])
+  @@map("journals")
+}
+
+model FocusSession {
+  id        String   @id @default(uuid())
+  startTime DateTime @map("start_time")
+  duration  Int
+  completed Boolean  @default(false)
+  userId    String   @map("user_id")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, completed])
+  @@index([startTime])
+  @@map("focus_sessions")
+}
+
+model MentorSession {
+  id        String   @id @default(uuid())
+  mentorId  String   @map("mentor_id")
+  userId    String   @map("user_id")
+  startTime DateTime @map("start_time")
+  duration  Int
+  notes     String?
+  completed Boolean  @default(false)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, mentorId])
+  @@index([startTime])
+  @@index([completed])
+  @@map("mentor_sessions")
+}
+
+enum TaskCategory {
+  inbox
+  next
+  projects
+  waiting
+  someday
+}
+
+enum TaskPriority {
+  high
+  medium
+  low
+}
+
+enum JournalType {
+  morning
+  evening
+  ftd
+}
